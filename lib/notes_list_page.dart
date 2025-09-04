@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'database_helper.dart';
-import 'login_page.dart'; // NOUVEAU : Importation de la page de connexion
+import 'login_page.dart';
 import 'note_edit_page.dart';
 
 class NotesListPage extends StatefulWidget {
@@ -43,36 +43,92 @@ class _NotesListPageState extends State<NotesListPage> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Note supprimée avec succès', style: GoogleFonts.poppins()),
+          content: Text(
+            'Note supprimée avec succès',
+            style: GoogleFonts.poppins(),
+          ),
           backgroundColor: Colors.green,
         ),
       );
     }
   }
 
+  // --- Dialogue de confirmation stylisé ---
   void _showDeleteConfirmationDialog(int noteId, String noteTitle) {
-    // ... (code inchangé pour la suppression)
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'Confirmer la suppression',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          ),
+          content: RichText(
+            text: TextSpan(
+              style: GoogleFonts.poppins(color: Colors.black87, fontSize: 16),
+              children: [
+                const TextSpan(text: 'Voulez-vous vraiment supprimer la note '),
+                TextSpan(
+                  text: '"$noteTitle"',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const TextSpan(text: ' ?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Annuler',
+                style: GoogleFonts.poppins(color: Colors.grey[700]),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteNote(noteId);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text('Supprimer', style: GoogleFonts.poppins()),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  // NOUVEAU : Méthode pour gérer la déconnexion
   void _logout() {
-    // pushAndRemoveUntil supprime toutes les routes précédentes.
-    // L'utilisateur ne pourra pas revenir en arrière à la liste de notes.
+    // Redirige vers la page de connexion et empêche de revenir en arrière
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => const LoginPage()),
       (Route<dynamic> route) => false,
     );
   }
 
-  // NOUVEAU : Méthode pour afficher le dialogue de confirmation de déconnexion
   void _showLogoutConfirmationDialog() {
     final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text('Déconnexion', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'Déconnexion',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          ),
           content: Text(
             'Êtes-vous sûr de vouloir vous déconnecter ?',
             style: GoogleFonts.poppins(color: Colors.black87, fontSize: 16),
@@ -80,7 +136,10 @@ class _NotesListPageState extends State<NotesListPage> {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Annuler', style: GoogleFonts.poppins(color: Colors.grey[700])),
+              child: Text(
+                'Annuler',
+                style: GoogleFonts.poppins(color: Colors.grey[700]),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -90,7 +149,9 @@ class _NotesListPageState extends State<NotesListPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.primaryColor,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               child: Text('Déconnexion', style: GoogleFonts.poppins()),
             ),
@@ -108,12 +169,14 @@ class _NotesListPageState extends State<NotesListPage> {
       appBar: AppBar(
         title: Text(
           "Mes Notes",
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: theme.primaryColor,
         elevation: 2,
         automaticallyImplyLeading: false,
-        // NOUVEAU : Bouton de déconnexion dans l'AppBar
         actions: [
           IconButton(
             icon: const Icon(Icons.logout_rounded, color: Colors.white),
@@ -127,7 +190,9 @@ class _NotesListPageState extends State<NotesListPage> {
         future: _notesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: theme.primaryColor));
+            return Center(
+              child: CircularProgressIndicator(color: theme.primaryColor),
+            );
           }
           if (snapshot.hasError) {
             return Center(child: Text("Erreur: ${snapshot.error}"));
@@ -139,7 +204,10 @@ class _NotesListPageState extends State<NotesListPage> {
           final notes = snapshot.data!;
 
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8.0,
+              vertical: 16.0,
+            ),
             itemCount: notes.length,
             itemBuilder: (context, index) {
               final note = notes[index];
@@ -149,13 +217,24 @@ class _NotesListPageState extends State<NotesListPage> {
 
               return Card(
                 elevation: 3,
-                margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                margin: const EdgeInsets.symmetric(
+                  vertical: 6.0,
+                  horizontal: 8.0,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 16,
+                  ),
                   title: Text(
                     title,
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 17),
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                    ),
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.only(top: 6.0),
@@ -168,8 +247,12 @@ class _NotesListPageState extends State<NotesListPage> {
                   ),
                   onTap: () => _navigateToEditPage(noteId: noteId),
                   trailing: IconButton(
-                    icon: Icon(Icons.delete_outline_rounded, color: Colors.redAccent.withOpacity(0.8)),
-                    onPressed: () => _showDeleteConfirmationDialog(noteId, title),
+                    icon: Icon(
+                      Icons.delete_outline_rounded,
+                      color: Colors.redAccent.withOpacity(0.8),
+                    ),
+                    onPressed: () =>
+                        _showDeleteConfirmationDialog(noteId, title),
                   ),
                 ),
               );
@@ -183,15 +266,44 @@ class _NotesListPageState extends State<NotesListPage> {
         backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add),
-        label: Text("Nouvelle Note", style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        label: Text(
+          "Nouvelle Note",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+        ),
         elevation: 4,
       ),
     );
   }
-  
-  // ... (widget _buildEmptyState inchangé)
+
+  // --- Widget pour l'état vide ---
   Widget _buildEmptyState() {
-     // ...
-    return Container(); // Placeholder, le code est dans votre fichier
+    final theme = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.note_add_outlined, size: 100, color: Colors.grey[300]),
+            const SizedBox(height: 24),
+            Text(
+              "C'est un peu vide ici...",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              "Cliquez sur 'Nouvelle Note' pour commencer à écrire.",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey[500]),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
