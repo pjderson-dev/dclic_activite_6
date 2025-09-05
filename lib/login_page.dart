@@ -15,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   final dbHelper = DatabaseHelper();
 
-  // Nouveaux états pour la gestion de l'UI
   bool _isPasswordVisible = false;
   bool _isLoading = false;
 
@@ -42,23 +41,22 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
-    String username = _usernameController.text.trim(); // .trim() pour enlever les espaces
+    String username = _usernameController.text.trim();
     String password = _passwordController.text;
 
-    // Simule une petite latence réseau pour voir le loader
     await Future.delayed(const Duration(seconds: 1)); 
 
     var user = await dbHelper.getUser(username, password);
     
     // Arrête l'indicateur de chargement
-    if (mounted) { // Vérifie si le widget est toujours dans l'arbre
+    if (mounted) {
       setState(() {
         _isLoading = false;
       });
     }
 
     if (user != null) {
-      Navigator.pushReplacement( // pushReplacement pour ne pas pouvoir revenir à la page de login
+      Navigator.pushReplacement( 
         context,
         MaterialPageRoute(builder: (context) => const NotesListPage()),
       );
@@ -77,19 +75,19 @@ class _LoginPageState extends State<LoginPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      // Utilisation d'une couleur de fond subtile
+     
       backgroundColor: Colors.grey[50], 
       body: SafeArea(
-        child: SingleChildScrollView( // Empêche le "pixel overflow" avec le clavier
+        child: SingleChildScrollView( 
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 48.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // --- SECTION LOGO ET TITRE ---
+                
                 Icon(
-                  Icons.note_alt_rounded, // Icône représentative
+                  Icons.note_alt_rounded, 
                   size: 80,
                   color: theme.primaryColor,
                 ),
@@ -97,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                 Text(
                   'Bienvenue !',
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins( // Police personnalisée
+                  style: GoogleFonts.poppins( 
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
@@ -113,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 48),
 
-                // --- CHAMP NOM D'UTILISATEUR ---
+              
                 TextFormField(
                   controller: _usernameController,
                   keyboardType: TextInputType.text,
@@ -130,10 +128,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // --- CHAMP MOT DE PASSE ---
+                
                 TextFormField(
                   controller: _passwordController,
-                  obscureText: !_isPasswordVisible, // Gère la visibilité
+                  obscureText: !_isPasswordVisible, 
                   style: GoogleFonts.poppins(),
                   decoration: InputDecoration(
                     labelText: 'Mot de passe',
@@ -143,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     filled: true,
                     fillColor: Colors.white,
-                    // Ajout de l'icône pour afficher/masquer le mot de passe
+                 
                     suffixIcon: IconButton(
                       icon: Icon(
                         _isPasswordVisible
@@ -160,7 +158,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 12),
                 
-                // --- LIEN MOT DE PASSE OUBLIÉ ---
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -173,9 +170,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 24),
                 
-                // --- BOUTON DE CONNEXION ---
+              
                 ElevatedButton(
-                  onPressed: _isLoading ? null : _login, // Désactive le bouton pendant le chargement
+                  onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: theme.primaryColor,
                     foregroundColor: Colors.white,
@@ -204,7 +201,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 48),
 
-                // --- LIEN DE CRÉATION DE COMPTE ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

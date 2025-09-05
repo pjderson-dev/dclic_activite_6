@@ -53,7 +53,6 @@ class _NotesListPageState extends State<NotesListPage> {
     }
   }
 
-  // --- Dialogue de confirmation stylisé ---
   void _showDeleteConfirmationDialog(int noteId, String noteTitle) {
     final theme = Theme.of(context);
     showDialog(
@@ -186,7 +185,6 @@ class _NotesListPageState extends State<NotesListPage> {
         ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        // ... (corps du widget inchangé)
         future: _notesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -275,7 +273,6 @@ class _NotesListPageState extends State<NotesListPage> {
     );
   }
 
-  // --- Widget pour l'état vide ---
   Widget _buildEmptyState() {
     final theme = Theme.of(context);
     return Center(

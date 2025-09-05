@@ -15,10 +15,10 @@ class _NoteEditPageState extends State<NoteEditPage> {
   final dbHelper = DatabaseHelper();
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-  final _formKey = GlobalKey<FormState>(); // Clé pour la validation
+  final _formKey = GlobalKey<FormState>(); 
 
   bool _isNewNote = true;
-  bool _isLoading = false; // État pour le feedback de sauvegarde
+  bool _isLoading = false; 
 
   @override
   void initState() {
@@ -79,10 +79,10 @@ class _NoteEditPageState extends State<NoteEditPage> {
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: theme.primaryColor,
-        iconTheme: const IconThemeData(color: Colors.white), // Flèche de retour en blanc
+        iconTheme: const IconThemeData(color: Colors.white), 
         elevation: 2,
       ),
-      // Le FAB est le bouton d'action principal
+
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _isLoading ? null : _saveNote,
         label: _isLoading
@@ -96,15 +96,15 @@ class _NoteEditPageState extends State<NoteEditPage> {
         backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView( // Pour éviter les problèmes avec le clavier
+      body: SingleChildScrollView( 
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form( // Utilisation d'un widget Form pour la validation
+          child: Form( 
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // --- CHAMP TITRE ---
+                
                 TextFormField(
                   controller: _titleController,
                   validator: (value) {
@@ -116,22 +116,22 @@ class _NoteEditPageState extends State<NoteEditPage> {
                   style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold),
                   decoration: InputDecoration(
                     hintText: 'Titre',
-                    border: InputBorder.none, // Design minimaliste pour le titre
-                    counterText: "", // Cache le compteur de caractères
+                    border: InputBorder.none, 
+                    counterText: "", 
                   ),
                   maxLength: 50,
                 ),
                 const SizedBox(height: 16),
 
-                // --- CHAMP CONTENU ---
+          
                 TextFormField(
                   controller: _contentController,
                   style: GoogleFonts.poppins(fontSize: 16, height: 1.5),
-                  maxLines: null, // Permet au champ de s'étendre
+                  maxLines: null, 
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
                     hintText: 'Commencez à écrire ici...',
-                    border: InputBorder.none, // Pas de bordure pour une expérience d'écriture immersive
+                    border: InputBorder.none, 
                   ),
                 ),
               ],
